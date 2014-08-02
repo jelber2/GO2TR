@@ -6,53 +6,62 @@ GO2TR: a gene ontology-based workflow to specify target regions for target enric
 Installation/Setup
 
     -Decide where you want to create a "GO2TR" folder
-    
+
         >For example on MacOSX you might want to open the terminal and create
          a GO2TR folder in your home directory: /Users/your_username/GO2TR
-         
+
             Terminal commands (don't enter lines beginning with ##):
               pwd
               ## for "print working directory" tells you what directory you are in ##
               ## if the system returns /Users/your_username/, you are in right place ##
-              
+
               mkdir GO2TR
               ## makes a folder called GO2TR ##
-              
+
               cd GO2TR
               ## changes current working directory to GO2TR ##
-              
-    -Install Bedtools: see https://github.com/arq5x/bedtools2/releases
-    
-        >I recommend downloading the newest version of Bedtools and saving it
-         to the GO2TR directory as bedtools.tar.gz, at the time of writing it is Bedtools-2.20.1
-         
-            Terminal commands once bedtools-mostrecentversion.tar.gz is in GO2TR directory
+
+    -Install bedtools: see https://github.com/arq5x/bedtools2/releases
+
+        >I recommend downloading the newest version of bedtools and saving it
+         to the GO2TR directory as bedtools.tar.gz.
+         At the time of writing it is bedtools-2.20.1, so that's what I will use in the code below.
+
+            Terminal commands once bedtools-2.20.1.tar.gz is in GO2TR directory
               cd /Users/your_username/GO2TR
               ## navigates to GO2TR directory if not already current working directory ##
-              
+
               tar -zxvf bedtools-2.20.1.tar.gz
-              ## unzips the archive and creates a folder called bedtools2-2.20.1 ##
-              
+              ## unzips the compressed archive and creates a directory called bedtools2-2.20.1 ##
+
               mv bedtools2-2.20.1 bedtools
-              ## mv or "move" command renames folder to bedtools for simplicity ##
-              
+              ## the mv ("move") command renames the "bedtools2-2.20.1" directory to "bedtools" for simplicity ##
+
               cd bedtools
               make
               ## the make command compiles the bedtools code ##
               ## cross your fingers that everything compiles correctly! ##
-              ## compiling should under 5 minutes ##
+              ## compiling should be under 5 minutes ##
               ## if compiliing worked, then you can test the install using following ##
-              
+
               cd bin
               ./bedtools
               ## the program should display a usage message if it was correctly compiled ##
-              
+
               cd ..
               ## changes the directory from bin to directory above called bedtools
-              
+
               cd ..
               ## changes the directory from bedtools to GO2TR ##
-              ## You are now ready to begin Step 1 of GO2TR!!##
+
+    -Download the process_gene_annotations.sh, filter_mRNA-GO_list.py, and filter_provisional_exome.py files from github
+            Terminal commands:
+              cd /Users/your_username/GO2TR
+              curl https://raw.githubusercontent.com/jelber2/GO2TR/master/process_gene_annotations.sh > process_gene_annotations.sh
+              curl https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_mRNA-GO_list.py > filter_mRNA-GO_list.py
+              curl https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_provisional_exome.py > filter_provisional_exome.py
+
+    -You are now ready to use GO2TR!!
 
 Step 1. Get gene annotations
 
@@ -60,15 +69,17 @@ Step 1. Get gene annotations
     -Click on folder for organism of interest
     -Click on GFF folder
     -Select and download *top_level.gff3.gz file
-    -Example terminal command to download a gff3 automatically to the current working directory:
+    -Example terminal command to download a gff3 automatically to the GO2TR directory:
         curl ftp://ftp.ncbi.nlm.nih.gov/genomes/Myotis_lucifugus/GFF/ref_Myoluc2.0_top_level.gff3.gz \
-        > genome.gff3.gz
+        > /Users/your_username/GO2TR/genome.gff3.gz
 
     -Place gene annotation file in GO2TR directory and rename genome.gff3.gz
         *For more information on NCBI Eukaryotic Genome Annotation see:
         http://www.ncbi.nlm.nih.gov/genome/annotation_euk
         
     -Run process_gene_annotations.sh script
+        Terminal command:
+            bash process_gene_annotations.sh
     
         What the script does:
     
