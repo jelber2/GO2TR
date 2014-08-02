@@ -3,10 +3,56 @@ GO2TR - Gene Ontology to Target Region
 
 GO2TR: a gene ontology-based workflow to specify target regions for target enrichment experiments
 
-Installation:
+Installation/Setup
 
-
-Workflow steps:
+    -Decide where you want to create a "GO2TR" folder
+    
+        >For example on MacOSX you might want to open the terminal and create
+         a GO2TR folder in your home directory: /Users/your_username/GO2TR
+         
+            Terminal commands (don't enter lines beginning with ##):
+              pwd
+              ## for "print working directory" tells you what directory you are in ##
+              ## if the system returns /Users/your_username/, you are in right place ##
+              
+              mkdir GO2TR
+              ## makes a folder called GO2TR ##
+              
+              cd GO2TR
+              ## changes current working directory to GO2TR ##
+              
+    -Install Bedtools: see https://github.com/arq5x/bedtools2/releases
+    
+        >I recommend downloading the newest version of Bedtools and saving it
+         to the GO2TR directory as bedtools.tar.gz, at the time of writing it is Bedtools-2.20.1
+         
+            Terminal commands once bedtools-mostrecentversion.tar.gz is in GO2TR directory
+              cd /Users/your_username/GO2TR
+              ## navigates to GO2TR directory if not already current working directory ##
+              
+              tar -zxvf bedtools-2.20.1.tar.gz
+              ## unzips the archive and creates a folder called bedtools2-2.20.1 ##
+              
+              mv bedtools2-2.20.1 bedtools
+              ## mv or "move" command renames folder to bedtools for simplicity ##
+              
+              cd bedtools
+              make
+              ## the make command compiles the bedtools code ##
+              ## cross your fingers that everything compiles correctly! ##
+              ## compiling should under 5 minutes ##
+              ## if compiliing worked, then you can test the install using following ##
+              
+              cd bin
+              ./bedtools
+              ## the program should display a usage message if it was correctly compiled ##
+              
+              cd ..
+              ## changes the directory from bin to directory above called bedtools
+              
+              cd ..
+              ## changes the directory from bedtools to GO2TR ##
+              ## You are now ready to begin Step 1 of GO2TR!!##
 
 Step 1. Get gene annotations
 
@@ -30,13 +76,14 @@ Step 1. Get gene annotations
              i.Extracts compressed genome.gff3.gz file using gunzip
             ii.Keeps only rows with "Gnomon", "exon", and "XM_" using grep
            iii.Uses perl to modify the GFF3 file to put mRNA transcript accession number in 3rd column
-            iv.Uses sort for proper input to bedtools, and saves file as genome.modified.gff3
+            iv.Uses sort for proper input to Bedtools, and saves file as genome.modified.gff3
            Terminal command for i-iv:
                 gunzip -c genome.gff3.gz | grep "Gnomon" | grep "exon" | grep "XM_" | perl -pe 's/(NW_.+)\t(Gnomon)\texon\t(\d+)\t(\d+)\t(.)\t(.)\t(.)\t(.+)(XM_\d+\.\d)(.+)\n/$1\t$2\t$9\t$3\t$4\t$5\t$6\t$7\t$8$9$10\n/' | sort -k 1,1 -k2,2n > genome.modified.gff3
 
         >Merge overlapping exons with Bedtools
-           Terminal command:
-                bedtools merge -i genome.modified.gff3 -s -nms > genome.coords.merged.bed
+           Terminal command if Bedtools was installed in /Users/your_username/GO2TR
+           and your current working directory is GO2TR:
+                ./bedtools/bin/bedtools merge -i genome.modified.gff3 -s -nms > genome.coords.merged.bed
 
         >Makes the provisional_exome, how it works:
              i.Uses awk to change from 0-based to 1-based coordinates
@@ -84,8 +131,8 @@ Step 1. Get gene annotations
            ii.Renames the combined files
           iii.Uses grep to get only rows with "XM"
            iv.Uses cut to remove domain data (i.e., column 3)
-       Terminal command (i-iv):
-        unzip -ca \*.zip \*.txt | grep "XM" | cut -f 1-2 > mRNA-GO.list.txt
+          Terminal command for i-iv:
+              unzip -ca \*.zip \*.txt | grep "XM" | cut -f 1-2 > mRNA-GO.list.txt
 
 Step 2. Select GO term
 
@@ -116,11 +163,16 @@ Step 2. Select GO term
 
     -To get only GOids (i.e., data in first column) use Unix cut command
        Terminal command:
-        cut -f 1 GOid.results.txt > GOid.list.txt
+        cut -f 1 GOid.results.txt > GOid.results.column1.txt
 
-    -Use code below to add GO id for the GO term of interest to GOid.list.txt
-       Terminal command:
-        cut -f 1 GOid.results.txt > GOid.list.txt
+    -Use the code below to add GO id for the GO term of interest to GOid.results.column1.txt
+     but save the new file as GOid.list.txt
+       Terminal command for first step:
+        echo && echo Enter gene ontology identifier for GO term you want to\
+        add to GOid.results.column1.txt in the form GO:1234567 && echo && read GOid
+       Terminal command for next step:
+        echo && echo adding $GOid to GOid.results.colum1.txt and saving files as GOid.list.txt \
+        echo && awk -v n=1 -v GOid="$GOid" 'NR == n {print GOid} {print}' GOid.results.column1.txt > GOid.list.txt
 
 Step 3.Filter mRNA-GO list by GO id list
 
