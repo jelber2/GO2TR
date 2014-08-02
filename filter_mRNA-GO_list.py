@@ -2,17 +2,16 @@
 
 ###############################################################################
 #
-# GO2OME file 6
-# "6_goids.py" Python script
+# "filter_mRNA-GO_list.py" Python script for GO2TR
 # created by Jean P. Elbers
 # jean.elbers@gmail.com
-# last edited 3 Mar 2014
+# last edited 2 August 2014
 #
 ###############################################################################
 #
 # Program steps:
 # -------------
-# 1.Input is mRNA-GOid.list.edited.txt in the format:
+# 1.Input is mRNA-GO.list.txt in the format:
 #   mRNAaccessionIdentifier	GO:#######
 #
 # 2.Reads through each line and makes a list of lists called rawdatalist with
@@ -36,13 +35,13 @@
 #   inputlist
 #
 # 6.If there are no GOids associated with the key (i.e., mRNAid) in inputlist,
-#   then the program appends the mRNAid to the list accessionlistnomatch,
+#   then the program appends the mRNAid to the list not_retained_mRNA_list,
 #   otherwise the program appends only the key with an associated matching
-#   value to list accessionlistmatch.
+#   value to list retained_mRNA_list.
 #
-# 7.Outputs accessionlistnomatch and accessionlistmatch in the same directory
-#   as the input using the names accessionlistnomatch.txt and
-#   accessionlistmatch.txt in the format:
+# 7.Outputs not_retained_mRNA_list and retained_mRNA_list in the same directory
+#   as the input using the names not_retained_mRNA_list.txt and
+#   retained_mRNA_list.txt in the format:
 #   mRNAaccessionIdentifier
 #   mRNAaccessionIdentifier
 #
@@ -50,7 +49,7 @@
 
 # creates rawdatalist and opens InFile
 rawdatalist = []
-InFile = open('mRNA-GOid.list.edited.txt', 'r')
+InFile = open('mRNA-GO.list.txt', 'r')
 
 # reads through each line in the file one by one and splits each
 # line into a list of two elements, the first
@@ -101,11 +100,11 @@ f.close()
 # If there is a match, then save the accession number to a new list.
 
 # creates empty lists and creates outfiles
-accessionlistmatch = []
-accessionlistnomatch = []
-OutFileName1 = 'accessionlistnomatch.txt'
+retained_mRNA_list = []
+not_retained_mRNA_list = []
+OutFileName1 = 'not_retained_mRNA_list.txt'
 OutFile1 = open(OutFileName1, 'w')
-OutFileName2 = 'accessionlistmatch.txt'
+OutFileName2 = 'retained_mRNA_list.txt'
 OutFile2 = open(OutFileName2, 'w')
 
 # for each dictionary key, returns associated values and looks
@@ -120,14 +119,14 @@ for key in datadict:
 	
 	# if there are no elements common to sets a and inputlist, then append
 	# the accession (the key associated with the values) to the
-	# accessionlistnomatch, otherwise append key with an associated matching
-	# value to accessionlistmatch
+	# not_retained_mRNA_list, otherwise append key with an associated matching
+	# value to retained_mRNA_list
 	if len(c) == 0:
-		accessionlistnomatch.append(key)
+		not_retained_mRNA_list.append(key)
 		OutFile1.write(key)
 		OutFile1.write('\n')
 	else:
-		accessionlistmatch.append(key)
+		retained_mRNA_list.append(key)
 		OutFile2.write(key)
 		OutFile2.write('\n')
 OutFile1.close()

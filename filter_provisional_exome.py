@@ -2,23 +2,23 @@
 
 ###############################################################################
 #
-# GO2OME file 7
-# "7_filterbedtoolsoutput.py" Python script
+# "filter_provisional_exome.py" Python script for GO2TR
 # created by Jean P. Elbers
 # jean.elbers@gmail.com
-# last edited 3 Mar 2014
+# last edited 2 August 2014
 #
 ###############################################################################
 #
 # Program steps:
 # -------------
-# 1.Input is genome.coords.merged.reformatted.txt in the format:
+# 1.Input is provisional_exome.txt in the format:
 #   chrom start end strand	mRNAaccessionIdentifier
 #   NW_004848299.1 261683 261849 +	XM_005278413.1
 #   NW_004848299.1 266496 266605 +	XM_005278413.1
 #
-# 2.Reads through each line and makes a list of lists called rawlist with
-#   the elements being each line, which is a list of subelements being:
+# 2.Reads through each line of provisional_exome.txt and makes a list of lists
+#   called rawlist with the elements being each line, which is a list of
+#   subelements being:
 #   subelement 0 = chrom start end strand
 #   subElement 1 = mRNAaccessionIdentifier
 #
@@ -34,7 +34,7 @@
 #   rawlist2 that is then converted to strings and finally a set called
 #   dictvalues
 #
-# 6.Reads in accessionlistmatch.txt to filter the data by in the format:
+# 6.Reads in retained_mRNA_list.txt to filter the data by in the format:
 #   mRNAaccessionIdentifier
 #   mRNAaccessionIdentifier
 #   then saves input to the list inputlist
@@ -116,8 +116,8 @@ dictvalues = rawdict.viewvalues()
 dictvalues = set(str(rawdict.viewvalues()).replace('[','').replace(']','')\
 .replace("'","").replace(';',' ').replace(',','').split())
 
-# opens accessionlistmatch.txt and creates inputlist
-f = open('accessionlistmatch.txt', 'r')
+# opens retained_mRNA_list.txt and creates inputlist
+f = open('retained_mRNA_list.txt', 'r')
 inputlist = []
 
 # reads through each line in the input file one by one and stores

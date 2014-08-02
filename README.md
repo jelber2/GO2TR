@@ -38,11 +38,11 @@ Step 1. Get gene annotations
            Terminal command:
                 bedtools merge -i genome.modified.gff3 -s -nms > genome.coords.merged.bed
 
-        >Makes the provisional exome, how it works:
+        >Makes the provisional_exome, how it works:
              i.Uses awk to change from 0-based to 1-based coordinates
-            ii.Use Perl to reformat Bedtools output into provisional exome format
+            ii.Use Perl to reformat Bedtools output into provisional_exome format
            Terminal command for i-ii:
-                awk -v OFS='\t' '{a=$2+1;print $1,a,$3,$4,$5,$6;}' genome.coords.merged.bed | perl -pe "s/(NW_\d+\.\d)\t(\d+)\t(\d+)\t(.+)\t(.)\t\n/\1 \2 \3 \5\t\4\n/" > genome.coords.merged.reformatted.txt
+                awk -v OFS='\t' '{a=$2+1;print $1,a,$3,$4,$5,$6;}' genome.coords.merged.bed | perl -pe "s/(NW_\d+\.\d)\t(\d+)\t(\d+)\t(.+)\t(.)\t\n/\1 \2 \3 \5\t\4\n/" > provisional_exome.txt
 
         >Makes the mRNA list
            Terminal command:
@@ -77,7 +77,7 @@ Step 1. Get gene annotations
         >Repeat search using above parameters for all mRNA.lista*.txt files
         >Can only submit 3 searches at a time with a single email account
         
-        >Save raw results from email as mRNA-GOid.lista*.zip and place in GO2TR directory
+        >Save raw results from email as mRNA-GO.lista*.zip and place in GO2TR directory
 
         >Process GOanna output to make mRNA-GO list, how it works:
             i.Unzips files combining all ".sliminput.txt" files
@@ -85,7 +85,7 @@ Step 1. Get gene annotations
           iii.Uses grep to get only rows with "XM"
            iv.Uses cut to remove domain data (i.e., column 3)
        Terminal command (i-iv):
-        unzip -ca \*.zip \*.txt | tee mRNA-GOid.list.txt | grep "XM" | cut -f 1-2 > mRNA-GOid.list.edited.txt
+        unzip -ca \*.zip \*.txt | grep "XM" | cut -f 1-2 > mRNA-GO.list.txt
 
 Step 2. Select GO term
 
@@ -114,26 +114,26 @@ Step 2. Select GO term
 
     -Save file as GOid.results.txt
 
-    -To get only GOids open the file in Excel to select only first column or use Unix cut command
+    -To get only GOids (i.e., data in first column) use Unix cut command
        Terminal command:
         cut -f 1 GOid.results.txt > GOid.list.txt
 
-    -Insert a new line a the top of GOid.list.txt and enter the GO term of interest
+    -Use code below to add GO id for the GO term of interest to GOid.list.txt
+       Terminal command:
+        cut -f 1 GOid.results.txt > GOid.list.txt
 
-    -Save the file and place it in the GO2TR directory
+Step 3.Filter mRNA-GO list by GO id list
 
-3.Filter mRNA-GO list by GO term list
+    -Run filter_mRNA-GO_list.py to make retained_mRNA_list
 
-    -Run filter_mRNA-GO_list.py to make retained mRA list
-
-4.Filter mRNA-GO list by GO term list
+Step 4.Filter provisional_exome by retained_mRNA_list
 
     -Run filter_provisional_exome.py to make target region
 
     -Reformats target region using Perl into a tab delimited format file
         Terminal command:
-            perl -pe "s/(\w+\.\d) (\d+) (\d+) (.)\n/\1\t\2\t\3\t\4\n/" GO2TR.coords.txt > GO2TR.coords.tabdel.txt
-    
+            perl -pe "s/(\w+\.\d) (\d+) (\d+) (.)\n/\1\t\2\t\3\t\4\n/" GO2TR.coords.txt > GO2TR.target_region.txt
+
     -Calculates target regions size with Perl
         Terminal command:
-            perl -ane '$sum += $F[2] - $F[1]; END { print "\n"; print "There are "; print $sum; print " bp in the target regions."; print "\n"; print "\n"}' GO2TR.coords.tabdel.txt
+            perl -ane '$sum += $F[2] - $F[1]; END { print "\n"; print "There are "; print $sum; print " bp in the target regions."; print "\n"; print "\n"}' GO2TR.target_region.txt
