@@ -123,16 +123,18 @@ Step 1. Get gene annotations
             Input File format	ACCESSIONS/GI
             Select Accession Type	GenBank Accession
             File to Upload	mRNA.lista
-            Database	SwissProt, TrEMBL, UniProt
+            Database	AgBase-UniProt
             Filter sequences and annotations from the selected databases to remove sequences with no GO annotations or with IEA or ND annotations only	Selected
-            Filter	Low complexity	not selected
             Expect	10e-20
-            Word Size	3
             Matrix	Blosum62
             Gap Costs	Existence11 Extension1
-            Nbr. of Descriptions	3
-            Nbr. of Alignments	3
+            Word Size	3
+            Filter	Low complexity not selected
+            Nbr. Target Seqs	3
+            Pct Id. Filter	10
+            Query Coverage Fil	10
             Type of Evidence to Return	Experimental Evidence Codes(EXP,IDA,IPI,IMP,IGI,IEP)
+        >Click on BLAST
         >Repeat search using above parameters for all mRNA.lista*.txt files
         >Can only submit 3 searches at a time with a single email account
         
