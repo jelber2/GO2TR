@@ -57,7 +57,7 @@ Installation/Setup
     -Download the process_gene_annotations.sh, filter_mRNA-GO_list.py, and filter_provisional_exome.py files from github
             Terminal commands:
               cd /Users/your_username/GO2TR
-              curl --user "GO2TRtestuser" -k "https://raw.githubusercontent.com/jelber2/GO2TR/master/process_gene_annotations.sh > process_gene_annotations.sh
+              curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/process_gene_annotations.sh > process_gene_annotations.sh
               curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_mRNA-GO_list.py > filter_mRNA-GO_list.py
               curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_provisional_exome.py > filter_provisional_exome.py
               ## use "-k" option to ignore security certificate ##
