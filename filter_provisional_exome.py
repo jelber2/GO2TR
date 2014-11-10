@@ -5,7 +5,7 @@
 # "filter_provisional_exome.py" Python script for GO2TR
 # created by Jean P. Elbers
 # jean.elbers@gmail.com
-# last edited 2 August 2014
+# last edited 10 November 2014
 #
 ###############################################################################
 #
@@ -52,7 +52,7 @@
 
 # creates rawlist and InFile
 rawlist = []
-InFile = open('genome.coords.merged.reformatted.txt', 'r')
+InFile = open('provisional_exome.txt', 'r')
 
 # read through each line in the file one by one and split the each
 # line into a list of two elements, the first (element 1), and the second
@@ -70,6 +70,8 @@ for line in InFile:
 		y = line.strip('\n').replace(';','\t').split('\t')
 		rawlist.append(y)
 InFile.close()
+#uncomment for debugging
+#print rawlist
 
 # if a list element contains more than two items (i.e., rawlist[0][2] exists),
 # then split the element until there are only two items
@@ -92,6 +94,8 @@ for element in rawlist:
 		else:
 			if Element + 1 < len(rawlist):
 				Element+=1
+#uncomment for debugging
+#print rawlist2
 
 # imports defaultdict from module collections in order to have
 # a dictionary of "lists"
@@ -106,15 +110,19 @@ from collections import defaultdict
 rawdict = defaultdict(list)
 for chrom, mRNAaccessionIdentifier in rawlist2:
 	rawdict[chrom].append(mRNAaccessionIdentifier)
+#uncomment for debugging
+#print rawdict
 
 # makes outfile
-OutFileName='GO2OME.coords.txt'
+OutFileName='GO2TR.coords.txt'
 OutFile = open(OutFileName, 'w')
 
 # converts all values (not keys) in rawdict into a set
 dictvalues = rawdict.viewvalues()
 dictvalues = set(str(rawdict.viewvalues()).replace('[','').replace(']','')\
 .replace("'","").replace(';',' ').replace(',','').split())
+#uncomment for debugging
+#print dictvalues
 
 # opens retained_mRNA_list.txt and creates inputlist
 f = open('retained_mRNA_list.txt', 'r')
@@ -126,10 +134,14 @@ for line in f:
 	x = line.strip('\n')
 	inputlist.append(x)
 f.close()
+#uncomment for debugging
+#print inputlist
 
 # searches within dictvalues for matching inputvalues and saves
 # result as the set matches
 matches = set(inputlist).intersection(dictvalues)
+#uncomment for debugging
+#print matches
 
 # filters rawdict so that only entries with values that correspond to
 # matches are returned but outputs the genomic coordinates (i.e., the keys)
