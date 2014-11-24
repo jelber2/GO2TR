@@ -66,13 +66,16 @@ Installation/Setup
 
 Step 1. Get gene annotations
 
+    -Note: An example dataset for the dog (Canis_lupus_familiaris) using the gene ontology term 'immune response' 
+     is available at https://raw.githubusercontent.com/jelber2/GO2TR/master/example_dataset.zip
+
     -Navigate your web browser to ftp://ftp.ncbi.nlm.nih.gov/genomes/
-    -Click on folder for organism of interest (e.g., Myotis_lucifugus)
+    -Click on folder for organism of interest (e.g., Canis_lupus_familiaris)
     -Click on GFF folder
     -Left click on the top_level.gff3.gz file and save it as genome.gff3.gz to your GO2TR directory
-    -Example terminal command to download the gff3.gz file for Myotis_lucifugus
+    -Example terminal command to download the gff3.gz file for Canis_lupus_familiaris
      automatically to the GO2TR directory:
-        curl ftp://ftp.ncbi.nlm.nih.gov/genomes/Myotis_lucifugus/GFF/ref_Myoluc2.0_top_level.gff3.gz \
+        curl ftp://ftp.ncbi.nlm.nih.gov/genomes/Canis_lupus_familiaris/GFF/ref_CanFam3.1_top_level.gff3.gz \
         > /Users/your_username/GO2TR/genome.gff3.gz
 
     -Run process_gene_annotations.sh script
@@ -149,7 +152,7 @@ Step 1. Get gene annotations
 Step 2. Select GO term
 
     -Determine Descendants of Gene Ontology term of interest
-    -Navigate browser to GO Online SQL Environment	http://www.berkeleybop.org/goose
+    -Navigate browser to GO Online SQL Environment	http://amigo.geneontology.org/goose
     -In the "Enter your SQL query" box entered following, except replace text
      'term of interest' with the GO term you want to find the descendants for
      (e.g., 'immune response')
