@@ -132,8 +132,8 @@ Step 1. Get gene annotations
             Word Size	3
             Filter	Low complexity not selected
             Nbr. Target Seqs	3
-            Pct Id. Filter	10
-            Query Coverage Fil	10
+            Pct Id. Filter	70
+            Query Coverage Fil	70
             Blast results format selection	TSV format
             Type of Evidence to Return	Experimental Evidence Codes(EXP,IDA,IPI,IMP,IGI,IEP)
         >Click on BLAST
