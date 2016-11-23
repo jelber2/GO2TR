@@ -57,9 +57,9 @@ Installation/Setup
     -Download the process_gene_annotations.sh, filter_mRNA-GO_list.py, and filter_provisional_exome.py files from github
             Terminal commands:
               cd /Users/your_username/GO2TR
-              curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/process_gene_annotations.sh > process_gene_annotations.sh
-              curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_mRNA-GO_list.py > filter_mRNA-GO_list.py
-              curl --user "GO2TRtestuser" -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_provisional_exome.py > filter_provisional_exome.py
+              curl -k https://raw.githubusercontent.com/jelber2/GO2TR/master/process_gene_annotations.sh > process_gene_annotations.sh
+              curl -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_mRNA-GO_list.py > filter_mRNA-GO_list.py
+              curl -k https://raw.githubusercontent.com/jelber2/GO2TR/master/filter_provisional_exome.py > filter_provisional_exome.py
               ## use "-k" option to ignore security certificate ##
 
     -You are now ready to use GO2TR!!
@@ -132,8 +132,8 @@ Step 1. Get gene annotations
             Word Size	3
             Filter	Low complexity not selected
             Nbr. Target Seqs	3
-            Pct Id. Filter	10
-            Query Coverage Fil	10
+            Pct Id. Filter	70
+            Query Coverage Fil	70
             Blast results format selection	TSV format
             Type of Evidence to Return	Experimental Evidence Codes(EXP,IDA,IPI,IMP,IGI,IEP)
         >Click on BLAST
