@@ -1,11 +1,12 @@
 #! /usr/bin/env python
+# encoding: utf-8
 
 ###############################################################################
 #
 # "filter_mRNA-GO_list.py" Python script for GO2TR
 # created by Jean P. Elbers
 # jean.elbers@gmail.com
-# last edited 2 August 2014
+# last edited 22 November 2016
 #
 ###############################################################################
 #
@@ -47,87 +48,127 @@
 #
 ###############################################################################
 
-# creates rawdatalist and opens InFile
-rawdatalist = []
-InFile = open('mRNA-GO.list.txt', 'r')
 
-# reads through each line in the file one by one and splits each
-# line into a list of two elements, the first
-# (i.e., the accession number), and the second
-# (i.e., the Gene ontology ID)
-for line in InFile:
-	if len(rawdatalist) < 1:
-		x = line.strip("\n").split("\t")
-		rawdatalist.append(x)
-	# if there is already an element added to the list (i.e., the
-	# first line of the text file), then add the next line to the list
-	else:
-		y = line.strip("\n").split("\t")
-		rawdatalist.append(y)
-InFile.close()
-
+import os
+import argparse
 # imports defaultdict from module collections in order to have a dictionary
 # of "lists"
 from collections import defaultdict
 
-# read through each element of the list (note: each element is actually
-# a two item list the first being the accession number and the second being
-# the GO ID) and make each list element a dictionary entry with the
-# accession number as the key with its associated GO ID as a value
-# NOTE: The defaultdict option allows for multiple values (i.e., GO IDs)
-# to be associated with each key (i.e., accession numbers)
-datadict = defaultdict(list)
-for accession, GoID in rawdatalist:
-	datadict[accession].append(GoID)
-	
-# creates an input called "f" from GOid.list.txt in the format:
-# GO:#######
-# GO:#######
-# also creates inputlist
-f = open('GOid.list.txt', 'r')
-inputlist = []
+class FullPaths(argparse.Action):
+    """Expand user- and relative-paths"""
+    def __call__(self, parser, namespace, values, option_string=None):
+        setattr(namespace, self.dest, os.path.abspath(os.path.expanduser(values)))
 
-# reads through each line in the input file one by one and stores each
-# line (i.e., gene ontology id) in inputlist
-for line in f:
-	x = line.strip('\n')
-	inputlist.append(x)
-f.close()
+def is_dir(dirname):
+    if not os.path.isdir(dirname):
+        msg = "{0} is not a directory".format(dirname)
+        raise argparse.ArgumentTypeError(msg)
+    else:
+        return dirname
 
-# dumps the values for each dictionary key into a set and look for
-# commonalities between the values and all 
-# GO IDs (i.e., input list below)
-# If there is a match, then save the accession number to a new list.
+def get_args():
+    """Get arguments from CLI"""
+    parser = argparse.ArgumentParser(
+            description="""\nFilters mRNA-GO list by GOidList to return retained mRNA list and not retained mRNA list""")
+    parser.add_argument(
+            "--mRNAGOList",
+            required=True,
+            action=FullPaths,
+            help="""The mRNA-GOlist to analyze"""
+        )
+    parser.add_argument(
+            "--GOidlist",
+            required=True,
+            action=FullPaths,
+            help="""The GOidlist to analyze"""
+        )
+    return parser.parse_args()
 
-# creates empty lists and creates outfiles
-retained_mRNA_list = []
-not_retained_mRNA_list = []
-OutFileName1 = 'not_retained_mRNA_list.txt'
-OutFile1 = open(OutFileName1, 'w')
-OutFileName2 = 'retained_mRNA_list.txt'
-OutFile2 = open(OutFileName2, 'w')
+def main():
+    args = get_args()
+    # creates rawdatalist and opens InFile
+    rawdatalist = []
+    mRNAGOidlisttxt = args.mRNAGOList
+    InFile = open(mRNAGOidlisttxt, 'r')
 
-# for each dictionary key, returns associated values and looks
-# for commonalities between values and datadict of gene ontology ids
-for key in datadict:
-	
-	# have to convert values associated with a specific key to a set
-	a = set(datadict.get(key))
-	
-	# looks for common element to set a and inputlist
-	c = a.intersection(inputlist)
-	
-	# if there are no elements common to sets a and inputlist, then append
-	# the accession (the key associated with the values) to the
-	# not_retained_mRNA_list, otherwise append key with an associated matching
-	# value to retained_mRNA_list
-	if len(c) == 0:
-		not_retained_mRNA_list.append(key)
-		OutFile1.write(key)
-		OutFile1.write('\n')
-	else:
-		retained_mRNA_list.append(key)
-		OutFile2.write(key)
-		OutFile2.write('\n')
-OutFile1.close()
-OutFile2.close()
+    # reads through each line in the file one by one and splits each
+    # line into a list of two elements, the first
+    # (i.e., the accession number), and the second
+    # (i.e., the Gene ontology ID)
+    for line in InFile:
+        if len(rawdatalist) < 1:
+            x = line.strip("\n").split("\t")
+            rawdatalist.append(x)
+        # if there is already an element added to the list (i.e., the
+        # first line of the text file), then add the next line to the list
+        else:
+           y = line.strip("\n").split("\t")
+           rawdatalist.append(y)
+    InFile.close()
+
+    # read through each element of the list (note: each element is actually
+    # a two item list the first being the accession number and the second being
+    # the GO ID) and make each list element a dictionary entry with the
+    # accession number as the key with its associated GO ID as a value
+    # NOTE: The defaultdict option allows for multiple values (i.e., GO IDs)
+    # to be associated with each key (i.e., accession numbers)
+    datadict = defaultdict(list)
+    for accession, GoID in rawdatalist:
+        datadict[accession].append(GoID)
+
+    # creates an input called "f" from GOid.list.txt in the format:
+    # GO:#######
+    # GO:#######
+    # also creates inputlist
+    GOidlisttxt = args.GOidlist
+    f = open(GOidlisttxt, 'r')
+    inputlist = []
+
+    # reads through each line in the input file one by one and stores each
+    # line (i.e., gene ontology id) in inputlist
+    for line in f:
+        x = line.strip('\n')
+        inputlist.append(x)
+    f.close()
+
+    # dumps the values for each dictionary key into a set and look for
+    # commonalities between the values and all 
+    # GO IDs (i.e., input list below)
+    # If there is a match, then save the accession number to a new list.
+
+    # creates empty lists and creates outfiles
+    retained_mRNA_list = []
+    not_retained_mRNA_list = []
+    OutFileName1 = 'not_retained_mRNA_list.txt'
+    OutFile1 = open(OutFileName1, 'w')
+    OutFileName2 = 'retained_mRNA_list.txt'
+    OutFile2 = open(OutFileName2, 'w')
+
+    # for each dictionary key, returns associated values and looks
+    # for commonalities between values and datadict of gene ontology ids
+    for key in datadict:
+
+        # have to convert values associated with a specific key to a set
+        a = set(datadict.get(key))
+
+        # looks for common element to set a and inputlist
+        c = a.intersection(inputlist)
+
+        # if there are no elements common to sets a and inputlist, then append
+        # the accession (the key associated with the values) to the
+        # not_retained_mRNA_list, otherwise append key with an associated matching
+        # value to retained_mRNA_list
+        if len(c) == 0:
+            not_retained_mRNA_list.append(key)
+            OutFile1.write(key)
+            OutFile1.write('\n')
+        else:
+            retained_mRNA_list.append(key)
+            OutFile2.write(key)
+            OutFile2.write('\n')
+    OutFile1.close()
+    OutFile2.close()
+
+if __name__ == '__main__':
+    main()
