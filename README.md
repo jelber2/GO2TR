@@ -1,6 +1,10 @@
 GO2TR - Gene Ontology to Target Region
 =====
 
+NOTE: GOanna no longer accepts Accession numbers and requires FASTA files, thus GOanna
+instructions below do not work. PLEASE USE rGO2TR (https://github.com/jelber2/rGO2TR) instead of GO2TR.
+
+
 GO2TR: a gene ontology-based workflow to specify target regions for target enrichment experiments
 
 Installation/Setup
